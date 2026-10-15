@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gita Life Coach AI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        saffron: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+    </style>
+</head>
+<body class="h-full bg-saffron-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors duration-300 flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white dark:bg-gray-900 border-b border-saffron-100 dark:border-gray-800 shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-saffron-600 to-gold-500 flex items-center justify-center text-white shadow-md shadow-saffron-500/20">
+                    <i data-lucide="sun" class="w-6 h-6 animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="font-serif text-lg font-bold tracking-tight bg-gradient-to-r from-saffron-600 to-gold-500 bg-clip-text text-transparent">Gita Life Coach AI</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Timeless Wisdom for Modern Dilemmas</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <!-- API Key Config Button -->
+                <button onclick="openApiKeyModal()" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-saffron-50 dark:hover:bg-gray-800 transition" title="API Settings">
+                    <i data-lucide="key" class="w-5 h-5"></i>
+                </button>
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-saffron-50 dark:hover:bg-gray-800 transition" title="Toggle Theme">
+                    <i id="theme-icon" data-lucide="moon" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 pb-24 overflow-y-auto">
+
+        <!-- TAB 1: Shlok of the Day -->
+        <section id="tab-shlok" class="tab-content space-y-6">
+            <div class="bg-gradient-to-br from-white to-saffron-50/50 dark:from-gray-900 dark:to-gray-900/50 rounded-2xl p-6 border border-saffron-100 dark:border-gray-800 shadow-xl shadow-saffron-500/5 relative overflow-hidden">
+                <div class="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-saffron-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                
+                <div class="flex items-center justify-between mb-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-saffron-100 text-saffron-800 dark:bg-saffron-900/40 dark:text-saffron-300">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1.5"></i> Daily Inspiration
+                    </span>
+                    <div class="flex items-center space-x-2">
+                        <!-- Audio Button for Daily Shlok -->
+                        <button onclick="playDailyShlokAudio()" class="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-saffron-600 hover:bg-saffron-700 text-white transition shadow-sm">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i>
+                            <span>Listen (हिंदी)</span>
+                        </button>
+                        <button id="save-daily-shlok-btn" onclick="saveCurrentDailyShlok()" class="flex items-center space-x-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-saffron-200 dark:border-gray-700 hover:bg-saffron-100 dark:hover:bg-gray-800 transition">
+                            <i data-lucide="bookmark" class="w-4 h-4 text-saffron-600"></i>
+                            <span>Bookmark</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center my-6 space-y-3">
+                    <h3 id="daily-verse-ref" class="text-xs font-semibold uppercase tracking-widest text-gold-600 dark:text-gold-400">Chapter 2, Verse 47</h3>
+                    <p id="daily-verse-sanskrit" class="font-serif text-xl md:text-2xl font-semibold leading-relaxed text-gray-900 dark:text-white">
+                        कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।<br>मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥
+                    </p>
+                </div>
+
+                <div class="bg-white/80 dark:bg-gray-800/80 rounded-xl p-4 border border-saffron-50 dark:border-gray-700/60 mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Translation</span>
+                        <button onclick="toggleTranslationLang()" class="text-xs text-saffron-600 dark:text-saffron-400 font-medium hover:underline">
+                            Switch to <span id="lang-switch-label">Hindi</span>
+                        </button>
+                    </div>
+                    <p id="daily-verse-translation" class="text-sm md:text-base text-gray-700 dark:text-gray-300 italic">
+                        "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action. Never consider yourself the cause of the results of your activities, nor be attached to inaction."
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center">
+                        <i data-lucide="lightbulb" class="w-4 h-4 mr-1 text-gold-500"></i> Modern Psychological Breakdown
+                    </h4>
+                    <p id="daily-verse-breakdown" class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        Anxiety stems from outcome obsession. By focusing entirely on the quality of your present effort (process) rather than external validation or rewards (outcome), you achieve peak performance and mental tranquility.
+                    </p>
+                </div>
+            </div>
+
+            <!-- More Verses Quick Selector -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-saffron-100 dark:border-gray-800 shadow-sm">
+                <h3 class="font-serif font-bold text-lg mb-3 flex items-center">
+                    <i data-lucide="book-open" class="w-5 h-5 mr-2 text-saffron-600"></i> Explore Core Teachings
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="core-verses-grid">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: AI Life Coach (Dilemma Solver) -->
+        <section id="tab-coach" class="tab-content hidden flex flex-col h-[75vh]">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-saffron-100 dark:border-gray-800 shadow-sm flex-1 flex flex-col overflow-hidden">
+                <!-- Chat Header -->
+                <div class="px-6 py-4 border-b border-saffron-100 dark:border-gray-800 bg-saffron-50/50 dark:bg-gray-800/50 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-saffron-600 text-white flex items-center justify-center text-sm font-bold">AI</div>
+                        <div>
+                            <h3 class="font-bold text-sm">Krishna's Counsel</h3>
+                            <p class="text-xs text-emerald-600 dark:text-emerald-400 flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5"></span> Online & Ready</p>
+                        </div>
+                    </div>
+                    <button onclick="clearChat()" class="text-xs text-gray-500 hover:text-red-500 transition flex items-center">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5 mr-1"></i> Clear Chat
+                    </button>
+                </div>
+
+                <!-- Chat Messages Area -->
+                <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4">
+                    <div class="flex items-start space-x-3 max-w-[85%]">
+                        <div class="w-8 h-8 rounded-full bg-saffron-600 text-white flex-shrink-0 flex items-center justify-center text-xs font-bold">AI</div>
+                        <div class="bg-saffron-50 dark:bg-gray-800 p-3.5 rounded-2xl rounded-tl-none border border-saffron-100 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+                            Namaste! I am your Gita Life Coach. Share whatever struggle, anxiety, or confusion you are facing today (career stress, relationships, lack of focus, grief), and let us find clarity through timeless wisdom.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Form -->
+                <form id="chat-form" onsubmit="handleChatSubmit(event)" class="p-3 border-t border-saffron-100 dark:border-gray-800 bg-white dark:bg-gray-900 flex items-center space-x-2">
+                    <input type="text" id="chat-input" placeholder="Ask about career stress, anxiety, confusion..." class="flex-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-saffron-500 transition">
+                    <button type="submit" id="chat-submit-btn" class="bg-saffron-600 hover:bg-saffron-700 text-white p-2.5 rounded-xl transition flex items-center justify-center shadow-md shadow-saffron-500/20">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 3: Mood-Based Guidance -->
+        <section id="tab-mood" class="tab-content hidden space-y-6">
+            <div class="text-center max-w-lg mx-auto space-y-2">
+                <h2 class="font-serif text-2xl font-bold">How are you feeling right now?</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Select your emotional state to instantly receive grounded guidance and relevant verses.</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <button onclick="selectMood('Anxious')" class="mood-card p-4 rounded-2xl bg-white dark:bg-gray-900 border border-saffron-100 dark:border-gray-800 hover:border-saffron-500 dark:hover:border-saffron-500 transition text-center group shadow-sm">
+                    <span class="text-3xl mb-2 block group-hover:scale-110 transition transform">🌪️</span>
+                    <h3 class="font-bold text-sm">Anxious</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Racing thoughts & worry</p>
+                </button>
+                <button onclick="selectMood('Confused')" class="mood-card p-4 rounded-2xl bg-white dark:bg-gray-900 border border-saffron-100 dark:border-gray-800 hover:border-saffron-500 dark:hover:border-saffron-500 transition text-center group shadow-sm">
+                    <span class="text-3xl mb-2 block group-hover:scale-110 transition transform">🧭</span>
+                    <h3 class="font-bold text-sm">Confused</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Dilemma & indecision</p>
+                </button>
+                <button onclick="selectMood('Burned Out')" class="mood-card p-4 rounded-2xl bg-white dark:bg-gray-900 border border-saffron-100 dark:border-gray-800 hover:border-saffron-500 dark:hover:border-saffron-500 transition text-center group shadow-sm">
+                    <span class="text-3xl mb-2 block group-hover:scale-110 transition transform">🔋</span>
+                    <h3 class="font-bold text-sm">Burned Out</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Fatigue & heaviness</p>
+                </button>
+                <button onclick="selectMood('Overwhelmed')" class="mood-card p-4 rounded-2xl bg-white dark:bg-gray-900 border border-saffron-100 dark:border-gray-800 hover:border-saffron-500 dark:hover:border-saffron-500 transition text-center group shadow-sm">
+                    <span class="text-3xl mb-2 block group-hover:scale-110 transition transform">🌊</span>
+                    <h3 class="font-bold text-sm">Overwhelmed</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Too much to handle</p>
+                </button>
+                <button onclick="selectMood('Seeking Purpose')" class="mood-card p-4 rounded-2xl bg-white dark:bg-gray-900 border border-saffron-100 dark:border-gray-800 hover:border-saffron-500 dark:hover:border-saffron-500 transition text-center group shadow-sm">
+                    <span class="text-3xl mb-2 block group-hover:scale-110 transition transform">🌟</span>
+                    <h3 class="font-bold text-sm">Seeking Purpose</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Meaning & direction</p>
+                </button>
+                <button onclick="selectMood('Grief / Sorrow')" class="mood-card p-4 rounded-2xl bg-white dark:bg-gray-900 border border-saffron-100 dark:border-gray-800 hover:border-saffron-500 dark:hover:border-saffron-500 transition text-center group shadow-sm">
+                    <span class="text-3xl mb-2 block group-hover:scale-110 transition transform">🕊️</span>
+                    <h3 class="font-bold text-sm">Grief / Sorrow</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Heartache & loss</p>
+                </button>
+            </div>
+
+            <!-- Mood Result Container -->
+            <div id="mood-result-container" class="hidden bg-white dark:bg-gray-900 rounded-2xl p-6 border border-saffron-200 dark:border-gray-800 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-saffron-100 dark:border-gray-800 pb-3">
+                    <h3 id="mood-title" class="font-serif font-bold text-lg text-saffron-700 dark:text-saffron-400">Guidance for Anxiety</h3>
+                    <button onclick="closeMoodResult()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm font-medium">Close</button>
+                </div>
+                <div id="mood-content" class="space-y-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: Saved Reflections & Bookmarks -->
+        <section id="tab-saved" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-serif text-xl font-bold">Your Sanctuary</h2>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Saved bookmarked verses and daily reflections stored locally.</p>
+                </div>
+                <button onclick="openNewJournalModal()" class="bg-saffron-600 hover:bg-saffron-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1.5 shadow-md shadow-saffron-500/20 transition">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>New Reflection</span>
+                </button>
+            </div>
+
+            <!-- Subtabs / Filter for Bookmarks vs Journal -->
+            <div class="flex space-x-2 border-b border-saffron-100 dark:border-gray-800 pb-2">
+                <button onclick="switchSavedTab('bookmarks')" id="btn-saved-bookmarks" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-saffron-600 text-white transition">Bookmarked Verses (<span id="count-bookmarks">0</span>)</button>
+                <button onclick="switchSavedTab('journal')" id="btn-saved-journal" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-saffron-50 dark:hover:bg-gray-800 transition">Journal Notes (<span id="count-journal">0</span>)</button>
+            </div>
+
+            <!-- Bookmarks List -->
+            <div id="container-bookmarks" class="space-y-3">
+                <!-- Populated dynamically -->
+            </div>
+
+            <!-- Journal List -->
+            <div id="container-journal" class="space-y-3 hidden">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-t border-saffron-100 dark:border-gray-800 z-40">
+        <div class="max-w-4xl mx-auto px-4 flex justify-around py-2">
+            <button onclick="switchTab('shlok')" class="nav-btn flex flex-col items-center py-1 px-3 rounded-xl text-saffron-600 dark:text-saffron-400 transition" data-tab="shlok">
+                <i data-lucide="book-open" class="w-5 h-5 mb-1"></i>
+                <span class="text-[10px] font-medium">Daily Shlok</span>
+            </button>
+            <button onclick="switchTab('coach')" class="nav-btn flex flex-col items-center py-1 px-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-saffron-600 transition" data-tab="coach">
+                <i data-lucide="message-square-code" class="w-5 h-5 mb-1"></i>
+                <span class="text-[10px] font-medium">AI Coach</span>
+            </button>
+            <button onclick="switchTab('mood')" class="nav-btn flex flex-col items-center py-1 px-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-saffron-600 transition" data-tab="mood">
+                <i data-lucide="heart-handshake" class="w-5 h-5 mb-1"></i>
+                <span class="text-[10px] font-medium">Mood Guidance</span>
+            </button>
+            <button onclick="switchTab('saved')" class="nav-btn flex flex-col items-center py-1 px-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-saffron-600 transition" data-tab="saved">
+                <i data-lucide="bookmark-check" class="w-5 h-5 mb-1"></i>
+                <span class="text-[10px] font-medium">Sanctuary</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- API Key Modal -->
+    <div id="apikey-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 border border-saffron-100 dark:border-gray-800 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-lg">Gemini API Settings</h3>
+                <button onclick="closeApiKeyModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                Your Gemini API key powers the live life coach chat. A default key has been securely loaded for you, but you can update or replace it here anytime.
+            </p>
+            <div class="space-y-1">
+                <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">API Key</label>
+                <input type="password" id="api-key-input" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-saffron-500">
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-medium border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Cancel</button>
+                <button onclick="saveApiKey()" class="px-4 py-2 rounded-xl text-xs font-medium bg-saffron-600 hover:bg-saffron-700 text-white shadow-md shadow-saffron-500/20 transition">Save Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Journal Modal -->
+    <div id="journal-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-lg w-full p-6 border border-saffron-100 dark:border-gray-800 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-lg">New Daily Reflection</h3>
+                <button onclick="closeNewJournalModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Title / Focus</label>
+                    <input type="text" id="journal-title" placeholder="e.g., Finding calm amidst project deadlines" class="w-full mt-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-saffron-500">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Reflection & Insights</label>
+                    <textarea id="journal-content" rows="4" placeholder="Write down your thoughts, lesson learned, or verse application..." class="w-full mt-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-saffron-500"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeNewJournalModal()" class="px-4 py-2 rounded-xl text-xs font-medium border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Cancel</button>
+                <button onclick="saveJournalEntry()" class="px-4 py-2 rounded-xl text-xs font-medium bg-saffron-600 hover:bg-saffron-700 text-white shadow-md shadow-saffron-500/20 transition">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-4 py-2.5 rounded-xl text-xs font-medium shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-center space-x-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-msg">Action completed successfully</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Default provided API Key
+        const DEFAULT_API_KEY = "AQ.Ab8RN6L-uQLHb10_hnOl6I_P-Vmy_Pxk1y-nfhZdFuk-i0iB5A";
+
+        // Application State Data
+        let apiKey = localStorage.getItem('gita_api_key') || DEFAULT_API_KEY;
+        let isHindi = false;
+        let chatHistoryState = [];
+        let currentlySpeakingAudioId = null;
+
+        let bookmarks = JSON.parse(localStorage.getItem('gita_bookmarks')) || [
+            {
+                ref: "Chapter 2, Verse 47",
+                sanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।",
+                translation: "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action."
+            },
+            {
+                ref: "Chapter 6, Verse 5",
+                sanskrit: "उद्धरेदात्मनाऽत्मानं नात्मानमअवसादयेत्।",
+                translation: "Elevate yourself through the power of your own mind, and not degrade yourself."
+            }
+        ];
+        let journalEntries = JSON.parse(localStorage.getItem('gita_journal')) || [
+            {
+                id: 1,
+                title: "Overcoming work anxiety",
+                content: "Realized today that worrying about quarterly targets only drains my energy. Focus on the daily task execution instead.",
+                date: "Oct 14, 2026"
+            }
+        ];
+
+        // Core Bhagavad Gita Verses Dataset
+        const coreVerses = [
+            {
+                ref: "Chapter 2, Verse 47",
+                sanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।",
+                translation: "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action.",
+                breakdown: "Detachment from outcomes leads to sustained calm and peak concentration.",
+                hindiSummary: "हे पार्थ, केवल कर्म पर ध्यान दो, फल की चिंता छोड़ दो। शांत मन से किया गया प्रयास ही तुम्हें सफलता देगा।"
+            },
+            {
+                ref: "Chapter 6, Verse 6",
+                sanskrit: "बन्धुरात्मत्मनस्तस्य यैनात्मैवात्मना जितः।",
+                translation: "For him who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, his mind will remain the greatest enemy.",
+                breakdown: "Mental mastery is the ultimate superpower; emotional regulation prevents self-sabotage.",
+                hindiSummary: "जिसने अपने मन पर विजय पा ली है, उसका मन उसका सबसे बड़ा मित्र है। आत्म-नियंत्रण ही शांति की कुंजी है।"
+            },
+            {
+                ref: "Chapter 2, Verse 14",
+                sanskrit: "मात्रास्पर्शास्तु कौत शीतोष्णसुखदुःखदाः।",
+                translation: "The nonpermanent appearance of happiness and distress, and their disappearance in due course, are like the appearance and disappearance of winter and summer seasons.",
+                breakdown: "Equanimity in the face of temporary highs and lows builds unshakeable mental resilience.",
+                hindiSummary: "सुख और दुख मौसम की तरह आते-जाते रहते हैं। इन्हें सहन करना सीखो और अपने लक्ष्य पर टिके रहो।"
+            },
+            {
+                ref: "Chapter 18, Verse 63",
+                sanskrit: "इति ते ज्ञानमाख्यातं गुह्याद्गुह्यतरं मया।",
+                translation: "Thus I have explained to you knowledge that is more confidential than all secrets. Deliberate on this fully, and then do what you wish to do.",
+                breakdown: "True wisdom empowers free will. Krishna acts as a coach, leaving final life choices to Arjuna's discretion.",
+                hindiSummary: "ज्ञान को समझो, विचार करो और फिर विवेक के साथ अपना निर्णय स्वयं लो।"
+            }
+        ];
+
+        // Mood Guidance Dataset
+        const moodData = {
+            "Anxious": {
+                title: "Finding Stillness in Anxiety",
+                verse: "Chapter 6, Verse 35",
+                sanskrit: "असंशयं महाबाहो मनो दुर्निग्रहं चलम्। अभ्यासेन तु कौन्तेय वैराग्येण च गृह्यते॥",
+                translation: "The mind is restless and turbulent, obstinate and very strong, O Krishna... but it may be controlled by regular practice and detachment.",
+                advice: "Anxiety is the mind projecting fears into an unwritten future. Return your awareness to your breath and focus solely on the immediate task in front of you.",
+                hindiSummary: "चंचल मन को निरंतर अभ्यास और वैराग्य से नियंत्रित किया जा सकता है। भविष्य की चिंता छोड़कर वर्तमान में जिएं।"
+            },
+            "Confused": {
+                title: "Clarity Through Right Action",
+                verse: "Chapter 3, Verse 35",
+                sanskrit: "श्रेयान्स्वधर्मो विगुणः परधर्मो स्वनुष्ठितात्।",
+                translation: "It is better to engage in one's own duty, even though performed imperfectly, than to accept another's duty.",
+                advice: "Confused about your path? Stop comparing your journey to others. Focus on your core values, authentic strengths, and immediate responsibilities.",
+                hindiSummary: "दूसरों की नकल करने के बजाय अपने कर्तव्यों का सत्यनिष्ठा से पालन करें। आपका मार्ग स्पष्ट हो जाएगा।"
+            },
+            "Burned Out": {
+                title: "Restoring Energy & Balance",
+                verse: "Chapter 6, Verse 17",
+                sanskrit: "युक्ताहारविहारस्य युक्तचेष्टस्य कर्मसु।",
+                translation: "He who is regulated in his habits of eating, sleeping, recreation and work can mitigate all material pains by practicing yoga.",
+                advice: "Burnout happens when discipline turns into exhaustion. Prioritize balanced rest, restorative sleep, and sustainable pacing over frantic over-hustle.",
+                hindiSummary: "संतुलित आहार, विश्राम और कर्म ही दुख से मुक्ति दिलाते हैं। विश्राम करें और मन को फिर से ऊर्जावान बनाएं।"
+            },
+            "Overwhelmed": {
+                title: "Simplifying Chaos",
+                verse: "Chapter 2, Verse 41",
+                sanskrit: "व्यवसायात्मिका बुद्धिरेकेह कुरुनन्दन।",
+                translation: "Those who are on this path are resolute in purpose, and their aim is one.",
+                advice: "When everything feels urgent, nothing is. Narrow your focus down to a single priority. Complete one small step before looking at the mountain ahead.",
+                hindiSummary: "एक समय में केवल एक ही महत्वपूर्ण कार्य पर ध्यान केंद्रित करें। दृढ़ संकल्प से अव्यवस्था समाप्त हो जाएगी।"
+            },
+            "Seeking Purpose": {
+                title: "Discovering Your True Calling",
+                verse: "Chapter 3, Verse 8",
+                sanskrit: "नियतं कुरु कर्म त्वं कर्म ज्यायो ह्यकर्मणः।",
+                translation: "Perform your prescribed duty, for doing so is better than not working. One cannot even maintain one's physical body without work.",
+                advice: "Purpose isn't found by waiting; it is forged through dedicated action, sincerity of service, and continuous self-improvement.",
+                hindiSummary: "कर्म ही जीवन की दिशा तय करता है। निस्वार्थ भाव से कार्य करते रहें, उद्देश्य अपने आप मिल जाएगा।"
+            },
+            "Grief / Sorrow": {
+                title: "Transcending Heartache",
+                verse: "Chapter 2, Verse 11",
+                sanskrit: "अशोच्यानन्वशोच्वंस्त्वं प्रज्ञावादांश्च भाषसे।",
+                translation: "While you speak words of wisdom, you are mourning for that which is not worthy of grief. The wise lament neither for the living nor the dead.",
+                advice: "Acceptance is the gateway to healing. Acknowledge the impermanence of worldly circumstances and anchor your soul in that which never changes.",
+                hindiSummary: "जो परिवर्तनशील है, उसके लिए शोक न करें। अपनी आत्मा की अमरता और शांति को महसूस करें।"
+            }
+        };
+
+        // Initialize application on load
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initTheme();
+            renderCoreVerses();
+            renderBookmarks();
+            renderJournal();
+            updateCounts();
+            
+            // Set initial API key input value
+            document.getElementById('api-key-input').value = apiKey;
+        });
+
+        // Theme Toggle Handler
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').setAttribute('data-lucide', 'sun');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-icon').setAttribute('data-lucide', 'moon');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-icon').setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            stopAudio();
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-saffron-600', 'dark:text-saffron-400');
+                btn.classList.add('text-gray-500', 'dark:text-gray-400');
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.remove('text-gray-500', 'dark:text-gray-400');
+                    btn.classList.add('text-saffron-600', 'dark:text-saffron-400');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Web Speech API Text-to-Speech Engine
+        function speakText(text, lang = 'hi-IN', elementId = null) {
+            if (!('speechSynthesis' in window)) {
+                showToast("Speech synthesis is not supported on this browser.");
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+
+            if (currentlySpeakingAudioId === elementId) {
+                currentlySpeakingAudioId = null;
+                return;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = 0.9; // Peaceful, steady pace
+            utterance.pitch = 1.0;
+
+            // Attempt to pick a natural voice for the language
+            const voices = window.speechSynthesis.getVoices();
+            const targetVoice = voices.find(v => v.lang.includes(lang) || (lang.startsWith('hi') && v.lang.includes('hi')));
+            if (targetVoice) utterance.voice = targetVoice;
+
+            utterance.onstart = () => {
+                currentlySpeakingAudioId = elementId;
+                showToast(`Playing audio (${lang === 'hi-IN' ? 'हिंदी' : 'English'})...`);
+            };
+
+            utterance.onend = () => {
+                currentlySpeakingAudioId = null;
+            };
+
+            utterance.onerror = () => {
+                currentlySpeakingAudioId = null;
+                showToast("Audio playback issue encountered.");
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopAudio() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            currentlySpeakingAudioId = null;
+        }
+
+        function playDailyShlokAudio() {
+            const sanskrit = document.getElementById('daily-verse-sanskrit').innerText;
+            const hindiMsg = "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन। हे पार्थ, केवल कर्म पर ध्यान दो, फल की चिंता छोड़ दो।";
+            speakText(`${sanskrit}. ${hindiMsg}`, 'hi-IN', 'daily-shlok');
+        }
+
+        // Translation toggle for Daily Shlok
+        function toggleTranslationLang() {
+            isHindi = !isHindi;
+            const transEl = document.getElementById('daily-verse-translation');
+            const labelEl = document.getElementById('lang-switch-label');
+            if (isHindi) {
+                transEl.innerText = "कर्म करने में ही तुम्हारा अधिकार है, उसके फलों में कभी नहीं। अतः तुम कर्मफल के हेतु मत बनो और तुम्हारी आसक्ति भी अकर्म में न हो।";
+                labelEl.innerText = "English";
+            } else {
+                transEl.innerText = "\"You have a right to perform your prescribed duty, but you are not entitled to the fruits of action. Never consider yourself the cause of the results of your activities, nor be attached to inaction.\"";
+                labelEl.innerText = "Hindi";
+            }
+        }
+
+        // Render Core Verses
+        function renderCoreVerses() {
+            const grid = document.getElementById('core-verses-grid');
+            grid.innerHTML = coreVerses.map((v, idx) => `
+                <div onclick="loadVerseToDaily(${idx})" class="p-3.5 rounded-xl border border-saffron-100 dark:border-gray-800 bg-saffron-50/40 dark:bg-gray-800/40 hover:border-saffron-400 cursor-pointer transition space-y-1">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400">${v.ref}</span>
+                    <p class="text-xs text-gray-700 dark:text-gray-300 font-medium line-clamp-2">${v.translation}</p>
+                </div>
+            `).join('');
+        }
+
+        function loadVerseToDaily(idx) {
+            const v = coreVerses[idx];
+            document.getElementById('daily-verse-ref').innerText = v.ref;
+            document.getElementById('daily-verse-sanskrit').innerText = v.sanskrit;
+            document.getElementById('daily-verse-translation').innerText = `"${v.translation}"`;
+            document.getElementById('daily-verse-breakdown').innerText = v.breakdown;
+            showToast(`Loaded ${v.ref}`);
+        }
+
+        // Save Daily Shlok
+        function saveCurrentDailyShlok() {
+            const ref = document.getElementById('daily-verse-ref').innerText;
+            const sanskrit = document.getElementById('daily-verse-sanskrit').innerText;
+            const translation = document.getElementById('daily-verse-translation').innerText;
+            
+            if (bookmarks.some(b => b.ref === ref)) {
+                showToast("Already bookmarked!");
+                return;
+            }
+
+            bookmarks.push({ ref, sanskrit, translation });
+            localStorage.setItem('gita_bookmarks', JSON.stringify(bookmarks));
+            renderBookmarks();
+            updateCounts();
+            showToast("Verse bookmarked successfully!");
+        }
+
+        // Mood Selection Handler
+        function selectMood(moodKey) {
+            const data = moodData[moodKey];
+            if (!data) return;
+
+            document.getElementById('mood-title').innerText = data.title;
+            document.getElementById('mood-result-container').classList.remove('hidden');
+            
+            const cardId = 'mood-' + Date.now();
+
+            document.getElementById('mood-content').innerHTML = `
+                <div class="bg-saffron-50/60 dark:bg-gray-800 p-4 rounded-xl border border-saffron-100 dark:border-gray-700 text-center space-y-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400">${data.verse}</span>
+                    <p class="font-serif text-base font-semibold">${data.sanskrit}</p>
+                    <p class="text-xs italic text-gray-600 dark:text-gray-300">"${data.translation}"</p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Practical Wisdom</h4>
+                    <p>${data.advice || data.breakdown}</p>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-saffron-100 dark:border-gray-800">
+                    <div class="flex space-x-2">
+                        <button onclick="speakText('${data.sanskrit.replace(/'/g, "\\'")} ${data.hindiSummary.replace(/'/g, "\\'")}', 'hi-IN', '${cardId}')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-saffron-600 hover:bg-saffron-700 text-white text-xs font-semibold shadow-sm transition">
+                            <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                            <span>हिंदी में सुनें</span>
+                        </button>
+                        <button onclick="speakText('${data.translation.replace(/'/g, "\\'")} ${data.advice.replace(/'/g, "\\'")}', 'en-US', '${cardId}-en')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-saffron-200 dark:border-gray-700 hover:bg-saffron-50 dark:hover:bg-gray-800 text-xs font-medium transition">
+                            <i data-lucide="volume-1" class="w-3.5 h-3.5"></i>
+                            <span>Listen (EN)</span>
+                        </button>
+                    </div>
+                    <button onclick="bookmarkMoodVerse('${data.verse}', '${data.sanskrit.replace(/'/g, "\\'")}', '${data.translation.replace(/'/g, "\\'")}')" class="text-xs font-semibold text-saffron-600 dark:text-saffron-400 hover:underline">
+                        Bookmark
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+            document.getElementById('mood-result-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeMoodResult() {
+            stopAudio();
+            document.getElementById('mood-result-container').classList.add('hidden');
+        }
+
+        function bookmarkMoodVerse(ref, sanskrit, translation) {
+            if (bookmarks.some(b => b.ref === ref)) {
+                showToast("Already bookmarked!");
+                return;
+            }
+            bookmarks.push({ ref, sanskrit, translation });
+            localStorage.setItem('gita_bookmarks', JSON.stringify(bookmarks));
+            renderBookmarks();
+            updateCounts();
+            showToast("Verse bookmarked successfully!");
+        }
+
+        // Structured Chat AI Integration with Gemini JSON Output & Dual TTS
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('chat-input');
+            const prompt = inputEl.value.trim();
+            if (!prompt) return;
+
+            inputEl.value = '';
+            appendChatMessage('user', prompt);
+
+            const loadingId = 'loading-' + Date.now();
+            appendLoadingMessage(loadingId);
+
+            const activeKey = apiKey || DEFAULT_API_KEY;
+            
+            const systemInstruction = `You are Gita Life Coach AI, a wise, empathetic spiritual advisor rooted in the Bhagavad Gita. Analyze user struggles and provide guidance.
+You MUST respond with a valid JSON object matching this schema:
+{
+  "verse": "Sanskrit text & chapter reference (e.g. Chapter 2, Verse 47)",
+  "translation": "English translation",
+  "audio_summary_hi": "A short, peaceful 2-3 sentence Hindi message ideal for audio narration (e.g. हे पार्थ, कर्म पर ध्यान दो, परिणाम की चिंता मत करो...)",
+  "advice": "Actionable, empathetic modern life coaching advice based on Gita teachings."
+}`;
+
+            chatHistoryState.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = {
+                contents: chatHistoryState,
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
+            };
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${activeKey}`;
+
+            try {
+                let response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok && response.status === 429) {
+                    await new Promise(r => setTimeout(r, 2000));
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                
+                document.getElementById(loadingId)?.remove();
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const rawJson = candidate.content.parts[0].text;
+                    let parsedData;
+                    try {
+                        parsedData = JSON.parse(rawJson);
+                    } catch (pErr) {
+                        parsedData = {
+                            verse: "Chapter 2, Verse 47",
+                            translation: "Focus on your duty, not the outcomes.",
+                            audio_summary_hi: "कर्म पर ध्यान दें, परिणाम की चिंता छोड़ दें। शांति आपको मिलेगी।",
+                            advice: candidate.content.parts[0].text
+                        };
+                    }
+
+                    chatHistoryState.push({ role: "model", parts: [{ text: rawJson }] });
+                    appendStructuredAiMessage(parsedData);
+                } else {
+                    appendChatMessage('ai', "I am currently meditating in silence. Please check your API key or try again in a moment.");
+                }
+            } catch (err) {
+                document.getElementById(loadingId)?.remove();
+                appendChatMessage('ai', "Network error connecting to the spiritual guide. Please verify your internet connection.");
+            }
+        }
+
+        function appendStructuredAiMessage(data) {
+            const container = document.getElementById('chat-messages');
+            const msgId = 'msg-' + Date.now();
+
+            const verseText = data.verse || 'Chapter 2, Verse 47';
+            const translationText = data.translation || '';
+            const hindiSummaryText = data.audio_summary_hi || 'हे पार्थ, कर्म करो और मन को शांत रखो।';
+            const adviceText = data.advice || '';
+
+            const html = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-saffron-600 text-white flex-shrink-0 flex items-center justify-center text-xs font-bold">AI</div>
+                    <div class="bg-saffron-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-saffron-100 dark:border-gray-700 p-4 rounded-2xl rounded-tl-none max-w-[88%] text-sm space-y-3 shadow-sm">
+                        
+                        <!-- Verse box -->
+                        <div class="bg-white/80 dark:bg-gray-900/80 p-3 rounded-xl border border-saffron-200/60 dark:border-gray-700 space-y-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400">Relevant Teaching</span>
+                            <p class="font-serif font-semibold text-xs text-gray-900 dark:text-gray-100">${verseText}</p>
+                            ${translationText ? `<p class="text-xs italic text-gray-600 dark:text-gray-300">"${translationText}"</p>` : ''}
+                        </div>
+
+                        <!-- Main Advice -->
+                        <div class="leading-relaxed">
+                            ${formatMarkdown(adviceText)}
+                        </div>
+
+                        <!-- Audio Voice Player Component -->
+                        <div class="pt-2 border-t border-saffron-200/50 dark:border-gray-700/60 flex flex-wrap gap-2 items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <button onclick="speakText('${hindiSummaryText.replace(/'/g, "\\'")}', 'hi-IN', '${msgId}-hi')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-saffron-600 hover:bg-saffron-700 text-white text-xs font-semibold shadow-sm transition">
+                                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                                    <span>हिंदी में सुनें</span>
+                                </button>
+                                <button onclick="speakText('${adviceText.replace(/'/g, "\\'").replace(/\n/g, " ")}', 'en-US', '${msgId}-en')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-saffron-200 dark:border-gray-700 hover:bg-saffron-100 dark:hover:bg-gray-700 text-xs font-medium transition">
+                                    <i data-lucide="volume-1" class="w-3.5 h-3.5"></i>
+                                    <span>Listen (EN)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            lucide.createIcons();
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendChatMessage(sender, text) {
+            const container = document.getElementById('chat-messages');
+            const isUser = sender === 'user';
+            
+            const html = `
+                <div class="flex items-start space-x-3 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}">
+                    <div class="w-8 h-8 rounded-full ${isUser ? 'bg-gold-500' : 'bg-saffron-600'} text-white flex-shrink-0 flex items-center justify-center text-xs font-bold">
+                        ${isUser ? 'You' : 'AI'}
+                    </div>
+                    <div class="${isUser ? 'bg-saffron-600 text-white rounded-tr-none' : 'bg-saffron-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-saffron-100 dark:border-gray-700 rounded-tl-none'} p-3.5 rounded-2xl max-w-[85%] text-sm leading-relaxed">
+                        ${formatMarkdown(text)}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendLoadingMessage(id) {
+            const container = document.getElementById('chat-messages');
+            const html = `
+                <div id="${id}" class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-saffron-600 text-white flex-shrink-0 flex items-center justify-center text-xs font-bold">AI</div>
+                    <div class="bg-saffron-50 dark:bg-gray-800 p-3.5 rounded-2xl rounded-tl-none border border-saffron-100 dark:border-gray-700 text-sm text-gray-500 flex items-center space-x-2">
+                        <span class="w-2 h-2 rounded-full bg-saffron-500 animate-bounce"></span>
+                        <span class="w-2 h-2 rounded-full bg-saffron-500 animate-bounce delay-100"></span>
+                        <span class="w-2 h-2 rounded-full bg-saffron-500 animate-bounce delay-200"></span>
+                        <span class="text-xs ml-1">Contemplating wisdom & preparing Hindi audio...</span>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearChat() {
+            stopAudio();
+            chatHistoryState = [];
+            document.getElementById('chat-messages').innerHTML = `
+                <div class="flex items-start space-x-3 max-w-[85%]">
+                    <div class="w-8 h-8 rounded-full bg-saffron-600 text-white flex-shrink-0 flex items-center justify-center text-xs font-bold">AI</div>
+                    <div class="bg-saffron-50 dark:bg-gray-800 p-3.5 rounded-2xl rounded-tl-none border border-saffron-100 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+                        Namaste! Conversation cleared. What else would you like to explore?
+                    </div>
+                </div>
+            `;
+            showToast("Chat cleared");
+        }
+
+        function formatMarkdown(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // Sanctuary & Local Storage Management
+        function switchSavedTab(subtab) {
+            const btnBookmarks = document.getElementById('btn-saved-bookmarks');
+            const btnJournal = document.getElementById('btn-saved-journal');
+            const containerBookmarks = document.getElementById('container-bookmarks');
+            const containerJournal = document.getElementById('container-journal');
+
+            if (subtab === 'bookmarks') {
+                btnBookmarks.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-saffron-600 text-white transition";
+                btnJournal.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-saffron-50 dark:hover:bg-gray-800 transition";
+                containerBookmarks.classList.remove('hidden');
+                containerJournal.classList.add('hidden');
+            } else {
+                btnJournal.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-saffron-600 text-white transition";
+                btnBookmarks.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-saffron-50 dark:hover:bg-gray-800 transition";
+                containerJournal.classList.remove('hidden');
+                containerBookmarks.classList.add('hidden');
+            }
+        }
+
+        function renderBookmarks() {
+            const container = document.getElementById('container-bookmarks');
+            if (bookmarks.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-sm text-gray-400">No bookmarked shloks yet. Explore the Daily Shlok or Mood guidance to bookmark verses.</div>`;
+                return;
+            }
+
+            container.innerHTML = bookmarks.map((b, idx) => `
+                <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-saffron-100 dark:border-gray-800 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400">${b.ref}</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="speakText('${b.sanskrit.replace(/'/g, "\\'")}', 'hi-IN', 'bm-${idx}')" class="text-saffron-600 dark:text-saffron-400 hover:text-saffron-700 text-xs flex items-center space-x-1">
+                                <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                                <span>Listen</span>
+                            </button>
+                            <button onclick="removeBookmark(${idx})" class="text-gray-400 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <p class="font-serif font-semibold text-sm">${b.sanskrit}</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-300 italic">"${b.translation}"</p>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function removeBookmark(idx) {
+            bookmarks.splice(idx, 1);
+            localStorage.setItem('gita_bookmarks', JSON.stringify(bookmarks));
+            renderBookmarks();
+            updateCounts();
+            showToast("Bookmark removed");
+        }
+
+        function renderJournal() {
+            const container = document.getElementById('container-journal');
+            if (journalEntries.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-sm text-gray-400">No journal notes yet. Click 'New Reflection' to log your personal insights.</div>`;
+                return;
+            }
+
+            container.innerHTML = journalEntries.map((j, idx) => `
+                <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-saffron-100 dark:border-gray-800 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-sm">${j.title}</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[10px] text-gray-400">${j.date}</span>
+                            <button onclick="removeJournal(${idx})" class="text-gray-400 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">${j.content}</p>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function saveJournalEntry() {
+            const title = document.getElementById('journal-title').value.trim();
+            const content = document.getElementById('journal-content').value.trim();
+            if (!title || !content) {
+                showToast("Please fill in both fields");
+                return;
+            }
+
+            const newEntry = {
+                id: Date.now(),
+                title,
+                content,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            };
+
+            journalEntries.unshift(newEntry);
+            localStorage.setItem('gita_journal', JSON.stringify(journalEntries));
+            renderJournal();
+            updateCounts();
+            closeNewJournalModal();
+            
+            document.getElementById('journal-title').value = '';
+            document.getElementById('journal-content').value = '';
+            showToast("Reflection saved successfully!");
+        }
+
+        function removeJournal(idx) {
+            journalEntries.splice(idx, 1);
+            localStorage.setItem('gita_journal', JSON.stringify(journalEntries));
+            renderJournal();
+            updateCounts();
+            showToast("Journal note removed");
+        }
+
+        function updateCounts() {
+            document.getElementById('count-bookmarks').innerText = bookmarks.length;
+            document.getElementById('count-journal').innerText = journalEntries.length;
+        }
+
+        // Modals management
+        function openApiKeyModal() {
+            document.getElementById('apikey-modal').classList.remove('hidden');
+        }
+        function closeApiKeyModal() {
+            document.getElementById('apikey-modal').classList.add('hidden');
+        }
+        function saveApiKey() {
+            const val = document.getElementById('api-key-input').value.trim();
+            if (val) {
+                apiKey = val;
+                localStorage.setItem('gita_api_key', apiKey);
+                closeApiKeyModal();
+                showToast("API Key updated successfully!");
+            }
+        }
+
+        function openNewJournalModal() {
+            document.getElementById('journal-modal').classList.remove('hidden');
+        }
+        function closeNewJournalModal() {
+            document.getElementById('journal-modal').classList.add('hidden');
+        }
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
